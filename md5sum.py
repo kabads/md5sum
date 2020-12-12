@@ -1,7 +1,6 @@
 from pathlib import Path
 import hashlib
 
-pathlist = Path("test").glob('**/*.txt')
 
 def md5(fname):
     hash_md5 = hashlib.md5()
@@ -10,8 +9,18 @@ def md5(fname):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
 
-for path in pathlist:
-     hash = md5(path)
-     print(path, ": ", hash)
-     # TODO output file name and hash on one line to a file
+def file_paths(pathlist, file):
+    for path in pathlist:
+        hash = md5(path)
+        print(path, ": ", hash)
+        output = str(path) + ": " + hash + "\n"
+        file.write(output)
 
+def main():
+    file = open("local.txt", "w")
+    pathList = Path("C:/Users/adamc/j").glob('**/*.txt')
+    file_paths(pathList, file)
+    file.close()
+
+if __name__ == '__main__':
+    main()
