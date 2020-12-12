@@ -1,6 +1,7 @@
 from pathlib import Path
 import hashlib
-
+from hexdump import hexdump
+import base64
 
 def md5(fname):
     hash_md5 = hashlib.md5()
@@ -10,15 +11,24 @@ def md5(fname):
     return hash_md5.hexdigest()
 
 def file_paths(pathlist, file):
+    count = 0
     for path in pathlist:
         hash = md5(path)
-        print(path, ": ", hash)
-        output = str(path) + ": " + hash + "\n"
-        file.write(output)
-
+        hash_hexdump = hexdump(hash.encode())
+        ascii_hash = hash_hexdump.encode('ascii')
+        base64_hash_bytes = base64.b64encode(ascii_hash)
+        base64_hash_message = base64_hash_bytes.decode('ascii')
+        print (base64_hash_message)
+        # print(path.name, ": ", base64.b64encode((hexdump(hash.encode()))))
+        # output = str(path.name) + ": " + hash + "\n"
+        # file.write(output)
+        if count > 10:
+            break
+        else:
+            count = count + 1
 def main():
-    file = open("local.txt", "w")
-    pathList = Path("C:/Users/adamc/j").glob('**/*.txt')
+    file = open("local-jpeg.txt", "w")
+    pathList = Path("C:/Users/adamc/jewson-images/global/product-images").glob('**/*.jpg')
     file_paths(pathList, file)
     file.close()
 
