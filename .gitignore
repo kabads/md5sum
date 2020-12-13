@@ -1,2 +1,6 @@
 venv
 venv/*
+pyvenv
+pyvenv/*
+connect.sh
+blob_quickstart.py

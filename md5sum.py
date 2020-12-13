@@ -1,7 +1,9 @@
 from pathlib import Path
 import hashlib
-from hexdump import hexdump
-import base64
+# from hexdump import hexdump
+#import base64
+import os
+from azure.storage.blob import BlobServiceClient
 
 def md5(fname):
     hash_md5 = hashlib.md5()
@@ -11,26 +13,44 @@ def md5(fname):
     return hash_md5.hexdigest()
 
 def file_paths(pathlist, file):
-    count = 0
     for path in pathlist:
-        hash = md5(path)
-        hash_hexdump = hexdump(hash.encode())
-        ascii_hash = hash_hexdump.encode('ascii')
-        base64_hash_bytes = base64.b64encode(ascii_hash)
-        base64_hash_message = base64_hash_bytes.decode('ascii')
-        print (base64_hash_message)
-        # print(path.name, ": ", base64.b64encode((hexdump(hash.encode()))))
-        # output = str(path.name) + ": " + hash + "\n"
-        # file.write(output)
-        if count > 10:
-            break
+        # path1 = '/mnt/c/Users/adamc/PycharmProjects/md5sum/100.jpg'
+        command = "md5sum --binary " + str(path.absolute()) +" | awk '{print $1}' | xxd -p -r | base64"
+        # print(command)
+        #a = check_output(command).strip()
+        name = str(path.name)
+        output = name + ": " + os.popen(command).read()
+        print (output)
+        file.write(output)
+        #print (os.system("md5sum --binary /mnt/c/Users/adamc/PycharmProjects/md5sum/100.jpg | awk '{print $1}' | xxd -p -r | base64").strip())
+
+def remote_check():
+    connect_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
+    blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+    container_name = "global"
+    # print("\nListing containers...")
+
+    container = blob_service_client.get_container_client(container=container_name)
+
+    blob_list = container.list_blobs()
+    count = 0
+    for blob in blob_list:
+        if count < 10:
+            print("\t" + blob.name)
         else:
-            count = count + 1
+            break
+
+
+
+# def main():
+#     file = open("local-jpeg.txt", "w")
+#     # pathList = Path("C:/Users/adamc/jewson-images/global/product-images").glob('**/*.jpg')
+#     pathList = Path("/mnt/c/Users/adamc/jewson-images/global/product-images/").glob('**/*.jpg')
+#     file_paths(pathList, file)
+#     file.close()
+
 def main():
-    file = open("local-jpeg.txt", "w")
-    pathList = Path("C:/Users/adamc/jewson-images/global/product-images").glob('**/*.jpg')
-    file_paths(pathList, file)
-    file.close()
+    remote_check()
 
 if __name__ == '__main__':
     main()
