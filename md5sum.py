@@ -1,7 +1,5 @@
 from pathlib import Path
 import hashlib
-# from hexdump import hexdump
-#import base64
 import os
 from azure.storage.blob import BlobServiceClient
 
@@ -16,17 +14,15 @@ def file_paths(pathlist, file):
     for path in pathlist:
         # path1 = '/mnt/c/Users/adamc/PycharmProjects/md5sum/100.jpg'
         command = "md5sum --binary " + str(path.absolute()) +" | awk '{print $1}' | xxd -p -r | base64"
-        # print(command)
-        #a = check_output(command).strip()
+
         name = str(path.name)
         output = name + ": " + os.popen(command).read()
         print (output)
         file.write(output)
-        #print (os.system("md5sum --binary /mnt/c/Users/adamc/PycharmProjects/md5sum/100.jpg | awk '{print $1}' | xxd -p -r | base64").strip())
 
-def remote_check():
-    connect_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
-    blob_service_client = BlobServiceClient.from_connection_string(connect_str)
+def remote_check(connection_str):
+    #connect_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
+    blob_service_client = BlobServiceClient.from_connection_string(connection_str)
     container_name = "global"
     # print("\nListing containers...")
 
@@ -36,10 +32,20 @@ def remote_check():
     count = 0
     for blob in blob_list:
         if count < 10:
-            print("\t" + blob.name)
+            #print(type(blob))
+            #metadata = container.get_blob_metadata(container_name, blob = blob_name)
+            #print("\t" + blob.name + str(metadata))
+
+            length = BlobServiceClient.get_blob_properties(container, container_name,
+                                                          blob.name).properties.content_length
+            print(length)
+            #blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob)
+            #blob_client.get_blob_properties()
+            print("Blob name: " + str(blob_client.blob_name))
+            # print(blob.get_blob_properties(container_name, blob.name))
+            count = count + 1
         else:
             break
-
 
 
 # def main():
@@ -49,8 +55,14 @@ def remote_check():
 #     file_paths(pathList, file)
 #     file.close()
 
+
 def main():
-    remote_check()
+    try:
+        CONNECTION_STRING = os.environ['AZURE_STORAGE_CONNECTION_STRING']
+        remote_check(CONNECTION_STRING)
+    except KeyError:
+        print("AZURE_STORAGE_CONNECTION_STRING must be set.")
+        sys.exit(1)
 
 if __name__ == '__main__':
     main()
