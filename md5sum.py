@@ -13,33 +13,21 @@ def md5(fname):
 
 def file_paths(pathlist, file):
     for path in pathlist:
-        # path1 = '/mnt/c/Users/adamc/PycharmProjects/md5sum/100.jpg'
         command = "md5sum --binary " + str(path.absolute()) +" | awk '{print $1}' | xxd -p -r | base64"
-
         name = str(path.name)
         output = name + ": " + os.popen(command).read()
         print (output)
         file.write(output)
 
 def remote_check(connection_str):
-    #connect_str = os.getenv('AZURE_STORAGE_CONNECTION_STRING')
     blob_service_client = BlobServiceClient.from_connection_string(connection_str)
     container_name = "global"
-    # print("\nListing containers...")
-
     container = blob_service_client.get_container_client(container=container_name)
 
     blob_list = container.list_blobs()
     count = 0
     for blob in blob_list:
         if count < 10:
-            #print(type(blob))
-            #metadata = container.get_blob_metadata(container_name, blob = blob_name)
-            #print("\t" + blob.name + str(metadata))
-
-            # length = BlobServiceClient.get_blob_properties(container, container_name,
-            #                                              blob.name).properties.content_length
-            # print(length)
             blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob)
             a = blob_client.get_blob_properties()
             # print(a.metadata.keys())
