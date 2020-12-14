@@ -2,6 +2,7 @@ from pathlib import Path
 import hashlib
 import os
 from azure.storage.blob import BlobServiceClient
+from os import sys
 
 def md5(fname):
     hash_md5 = hashlib.md5()
@@ -36,11 +37,13 @@ def remote_check(connection_str):
             #metadata = container.get_blob_metadata(container_name, blob = blob_name)
             #print("\t" + blob.name + str(metadata))
 
-            length = BlobServiceClient.get_blob_properties(container, container_name,
-                                                          blob.name).properties.content_length
-            print(length)
-            #blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob)
-            #blob_client.get_blob_properties()
+            # length = BlobServiceClient.get_blob_properties(container, container_name,
+            #                                              blob.name).properties.content_length
+            # print(length)
+            blob_client = blob_service_client.get_blob_client(container=container_name, blob=blob)
+            a = blob_client.get_blob_properties()
+            # print(a.metadata.keys())
+            print(a.content_settings.content_md5)
             print("Blob name: " + str(blob_client.blob_name))
             # print(blob.get_blob_properties(container_name, blob.name))
             count = count + 1
