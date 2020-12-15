@@ -12,16 +12,6 @@ def md5(fname):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
 
-def file_paths(pathlist, file):
-    for path in pathlist:
-        # As I can get the md5sum straight from Azure - I don't need this weird hex base64 thing.
-        # command = "md5sum --binary " + str(path.absolute()) +" | awk '{print $1}' | xxd -p -r | base64"
-        name = str(path.name)
-        hash_calc = md5(name)
-        print(path.name, hash_calc)
-        # output = name + ": " + os.popen(command).read()
-        # print (output)
-        # file.write(output)
 
 def remote_check(connection_str):
     blob_service_client = BlobServiceClient.from_connection_string(connection_str)
@@ -48,14 +38,24 @@ def remote_check(connection_str):
         else:
            break
 
+def local_md5_check(pathlist, file):
+    for path in pathlist:
+        # As I can get the md5sum straight from Azure - I don't need this weird hex base64 thing.
+        # command = "md5sum --binary " + str(path.absolute()) +" | awk '{print $1}' | xxd -p -r | base64"
+        # name = str(path.name)
+        hash_calc = md5(path)
+        print(path.name, hash_calc)
+        # output = name + ": " + os.popen(command).read()
+        # print (output)
+        file.write(output)
 
 def main():
     file = open("md5_local_jpeg.txt", "w")
     # The below path is for windows:
     # pathList = Path("C:/Users/adamc/jewson-images/global/product-images").glob('**/*.jpg')
     # This path is for linux:
-    pathList = Path("/mnt/c/Users/adamc/jewson-images/global/product-images/").glob('**/*.jpg')
-    file_paths(pathList, file)
+    pathlist = Path("/mnt/c/Users/adamc/jewson-images/global/product-images/").glob('**/*.jpg')
+    local_md5_check(pathlist, file)
     file.close()
 
 
