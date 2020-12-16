@@ -3,8 +3,9 @@ import hashlib
 import os
 from azure.storage.blob import BlobServiceClient
 from os import sys
-import base64
 import binascii
+import argparse
+
 
 def md5(fname):
     hash_md5 = hashlib.md5()
@@ -60,14 +61,16 @@ def local_md5_check(pathlist, file):
 
 
 # def main():
-#     file = open("md5_local_pdf.txt", "w")
-#     # pathList = Path("C:/Users/adamc/jewson-images/global/product-images").glob('**/*.jpg')
-#     pathList = Path("/mnt/c/Users/adamc/jewson-images/global/product-docs/").glob('**/*.pdf')
-#     file_paths(pathList, file)
+#     file = open("md5_local_pdf_test.txt", "w")
+#     pathlist = Path("C:/Users/adamc/jewson-images/global/product-images").glob('**/*.jpg')
+#     # pathlist = Path("/mnt/c/Users/adamc/jewson-images/global/product-docs/").glob('**/*.pdf')
+#     local_md5_check(pathlist, file)
 #     file.close()
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.parse_args()
     try:
         CONNECTION_STRING = os.environ['AZURE_STORAGE_CONNECTION_STRING']
         file = open("md5_remote.txt", "w")
