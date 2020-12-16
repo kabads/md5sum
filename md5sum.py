@@ -1,10 +1,10 @@
-from pathlib import Path
 import hashlib
 import os
 from azure.storage.blob import BlobServiceClient
 from os import sys
 import binascii
 import argparse
+from pathlib import Path
 
 
 def md5(fname):
@@ -50,25 +50,25 @@ def local_md5_check(pathlist, file):
         print (output)
         file.write(output)
 
-# def main():
-#     file = open("md5_local_jpeg.txt", "w")
-#     # The below path is for windows:
-#     # pathList = Path("C:/Users/adamc/jewson-images/global/product-images").glob('**/*.jpg')
-#     # This path is for linux:
-#     pathlist = Path("/mnt/c/Users/adamc/jewson-images/global/product-images/").glob('**/*.jpg')
-#     local_md5_check(pathlist, file)
-#     file.close()
+def get_local_image_checksums():
+    file = open("md5_local_jpeg1.txt", "w")
+    # The below path is for windows:
+    pathlist = Path("C:/Users/adamc/jewson-images/global/product-images").glob('**/*.jpg')
+    # This path is for linux:
+    # pathlist = Path("/mnt/c/Users/adamc/jewson-images/global/product-images/").glob('**/*.jpg')
+    local_md5_check(pathlist, file)
+    file.close()
 
 
-# def main():
-#     file = open("md5_local_pdf_test.txt", "w")
-#     pathlist = Path("C:/Users/adamc/jewson-images/global/product-images").glob('**/*.jpg')
-#     # pathlist = Path("/mnt/c/Users/adamc/jewson-images/global/product-docs/").glob('**/*.pdf')
-#     local_md5_check(pathlist, file)
-#     file.close()
+def get_local_doc_checsums():
+    file = open("md5_local_pdf_test.txt", "w")
+    pathlist = Path("C:/Users/adamc/jewson-images/global/product-images").glob('**/*.jpg')
+    # pathlist = Path("/mnt/c/Users/adamc/jewson-images/global/product-docs/").glob('**/*.pdf')
+    local_md5_check(pathlist, file)
+    file.close()
 
 
-def main():
+def get_remote_checksums():
     parser = argparse.ArgumentParser()
     parser.parse_args()
     try:
@@ -79,6 +79,30 @@ def main():
     except KeyError:
         print("AZURE_STORAGE_CONNECTION_STRING must be set.")
         sys.exit(1)
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-l", "--location", required=True, choices=["localimages", "localdocs", "remote"],
+                        help="Where do you wish to get the checksums?")
+    parser.add_argument("-f", "--filename",
+                        help="file to write checksums to")
+    args = parser.parse_args()
+    print(args.location)
+    if args.filename is not None:
+        filename = args.filename
+        if args.location == 'localimages':
+            get_local_image_checksums(filename)
+        elif args.location == 'localdocs':
+            get_local_doc_checsums(filename)
+        elif args.location == 'remote':
+            get_remote_checksums(filename)
+    else:
+        if args.location == 'localimages':
+            get_local_image_checksums()
+        elif args.location == 'localdocs':
+            get_local_doc_checsums()
+        elif args.location == 'remote':
+            get_remote_checksums()
 
 if __name__ == '__main__':
     main()
