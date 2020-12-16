@@ -50,8 +50,8 @@ def local_md5_check(pathlist, file):
         print (output)
         file.write(output)
 
-def get_local_image_checksums():
-    file = open("md5_local_jpeg1.txt", "w")
+def get_local_image_checksums(filename = "20201217_md5_local_jpg.txt"):
+    file = open(filename, "w")
     # The below path is for windows:
     pathlist = Path("C:/Users/adamc/jewson-images/global/product-images").glob('**/*.jpg')
     # This path is for linux:
@@ -60,48 +60,54 @@ def get_local_image_checksums():
     file.close()
 
 
-def get_local_doc_checsums():
-    file = open("md5_local_pdf_test.txt", "w")
-    pathlist = Path("C:/Users/adamc/jewson-images/global/product-images").glob('**/*.jpg')
+def get_local_doc_checksums(filename='20201217_md5_local_pdf_test.txt'):
+    file = open(filename, "w")
+    pathlist = Path("C:/Users/adamc/jewson-images/global/product-docs").glob('**/*.pdf')
     # pathlist = Path("/mnt/c/Users/adamc/jewson-images/global/product-docs/").glob('**/*.pdf')
     local_md5_check(pathlist, file)
     file.close()
 
 
-def get_remote_checksums():
-    parser = argparse.ArgumentParser()
-    parser.parse_args()
+def get_remote_checksums(filename='20201217_md5_remote.txt'):
     try:
         CONNECTION_STRING = os.environ['AZURE_STORAGE_CONNECTION_STRING']
-        file = open("md5_remote.txt", "w")
+        file = open(filename, "w")
         remote_md5_check(CONNECTION_STRING, file)
         file.close()
     except KeyError:
         print("AZURE_STORAGE_CONNECTION_STRING must be set.")
         sys.exit(1)
 
+
+def compare():
+    source_file = File.open('20201216_md5_local_jpg.txt', 'r')
+    target_file = File.open('20201216_md5_remote.txt', 'r')
+
 def main():
+    #get_remote_checksums()
+    # get_local_doc_checksums()
+
     parser = argparse.ArgumentParser()
     parser.add_argument("-l", "--location", required=True, choices=["localimages", "localdocs", "remote"],
-                        help="Where do you wish to get the checksums?")
+                       dest = 'destination',
+                       help="Where do you wish to get the checksums? Choose ONE of the options.")
     parser.add_argument("-f", "--filename",
                         help="file to write checksums to")
     args = parser.parse_args()
-    print(args.location)
-    if args.filename is not None:
-        filename = args.filename
+    if args.filename:
         if args.location == 'localimages':
-            get_local_image_checksums(filename)
+            get_local_image_checksums(args.filename)
         elif args.location == 'localdocs':
-            get_local_doc_checsums(filename)
+            get_local_doc_checksums(args.filename)
         elif args.location == 'remote':
-            get_remote_checksums(filename)
+            get_remote_checksums(args.filename)
     else:
-        if args.location == 'localimages':
+        destination = args.destination
+        if destination == 'localimages':
             get_local_image_checksums()
-        elif args.location == 'localdocs':
-            get_local_doc_checsums()
-        elif args.location == 'remote':
+        if destination == 'localdocs':
+            get_local_doc_checksums()
+        if destination == 'remote':
             get_remote_checksums()
 
 if __name__ == '__main__':
