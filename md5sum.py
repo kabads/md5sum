@@ -85,8 +85,8 @@ def compare():
 
 def main():
     parser = argparse.ArgumentParser()
-    requiredNamed = parser.add_argument_group('required location arguments')
-    requiredNamed.add_argument("-l", "--location", required=True, choices=["localimages", "localdocs", "remote"],
+    requiredLocation = parser.add_argument_group('required location arguments')
+    requiredLocation.add_argument("-l", "--location", required=True, choices=["localimages", "localdocs", "remote"],
                        dest = 'destination',
                        help="Where do you wish to get the checksums? Choose ONE of the options.")
     parser.add_argument("-f", "--filename",
