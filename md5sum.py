@@ -95,11 +95,11 @@ def main():
                         help="file to write checksums to")
     args = parser.parse_args()
     if args.filename:
-        if args.location == 'localimages':
+        if args.destination == 'localimages':
             get_local_image_checksums(args.filename)
-        elif args.location == 'localdocs':
+        elif args.destination == 'localdocs':
             get_local_doc_checksums(args.filename)
-        elif args.location == 'remote':
+        elif args.destination == 'remote':
             get_remote_checksums(args.filename)
     else:
         destination = args.destination
