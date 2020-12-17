@@ -50,6 +50,7 @@ def local_md5_check(pathlist, file):
         print (output)
         file.write(output)
 
+
 def get_local_image_checksums(filename="20201217_md5_local_jpg.txt"):
     file = open(filename, "w")
     # The below path is for windows:
@@ -80,8 +81,8 @@ def get_remote_checksums(filename='20201217_md5_remote.txt'):
 
 
 def compare():
-    source_file = File.open('20201216_md5_local_jpg.txt', 'r')
-    target_file = File.open('20201216_md5_remote.txt', 'r')
+    source_file = open('20201216_md5_local_jpg.txt', 'r')
+    target_file = open('20201216_md5_remote.txt', 'r')
 
 def main():
     parser = argparse.ArgumentParser()
