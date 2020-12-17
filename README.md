@@ -13,7 +13,7 @@ Ensure that authentication works for Azure  CLI with `az login`.
 
 ## Execution
 
-usage: md5sum.py [-h] -l {localimages,localdocs,remote} [-f FILENAME]
+    usage: md5sum.py [-h] -l {localimages,localdocs,remote} [-f FILENAME]
 
     optional arguments:
       -h, --help            show this help message and exit
