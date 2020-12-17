@@ -52,7 +52,6 @@ def local_md5_check(pathlist, file):
 
 def get_local_image_checksums(filename="20201217_md5_local_jpg.txt"):
     file = open(filename, "w")
-    print("opened file " + filename)
     # The below path is for windows:
     # pathlist = Path("C:/Users/adamc/jewson-images/global/product-images").glob('**/*.jpg')
     # This path is for linux:
@@ -63,8 +62,8 @@ def get_local_image_checksums(filename="20201217_md5_local_jpg.txt"):
 
 def get_local_doc_checksums(filename='20201217_md5_local_pdf_test.txt'):
     file = open(filename, "w")
-    pathlist = Path("C:/Users/adamc/jewson-images/global/product-docs").glob('**/*.pdf')
-    # pathlist = Path("/mnt/c/Users/adamc/jewson-images/global/product-docs/").glob('**/*.pdf')
+    # pathlist = Path("C:/Users/adamc/jewson-images/global/product-docs").glob('**/*.pdf')
+    pathlist = Path("/mnt/c/Users/adamc/jewson-images/global/product-docs/").glob('**/*.pdf')
     local_md5_check(pathlist, file)
     file.close()
 
@@ -86,7 +85,8 @@ def compare():
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-l", "--location", required=True, choices=["localimages", "localdocs", "remote"],
+    requiredNamed = parser.add_argument_group('required location arguments')
+    requiredNamed.add_argument("-l", "--location", required=True, choices=["localimages", "localdocs", "remote"],
                        dest = 'destination',
                        help="Where do you wish to get the checksums? Choose ONE of the options.")
     parser.add_argument("-f", "--filename",

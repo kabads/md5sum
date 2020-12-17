@@ -13,3 +13,14 @@ Ensure that authentication works for Azure  CLI with `az login`.
 
 ## Execution
 
+usage: md5sum.py [-h] -l {localimages,localdocs,remote} [-f FILENAME]
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      -f FILENAME, --filename FILENAME
+                            file to write checksums to
+    
+    required location arguments:
+      -l {localimages,localdocs,remote}, --location {localimages,localdocs,remote}
+                            Where do you wish to get the checksums? Choose ONE of
+                            the options.
