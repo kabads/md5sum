@@ -50,12 +50,13 @@ def local_md5_check(pathlist, file):
         print (output)
         file.write(output)
 
-def get_local_image_checksums(filename = "20201217_md5_local_jpg.txt"):
+def get_local_image_checksums(filename="20201217_md5_local_jpg.txt"):
     file = open(filename, "w")
+    print("opened file " + filename)
     # The below path is for windows:
-    pathlist = Path("C:/Users/adamc/jewson-images/global/product-images").glob('**/*.jpg')
+    # pathlist = Path("C:/Users/adamc/jewson-images/global/product-images").glob('**/*.jpg')
     # This path is for linux:
-    # pathlist = Path("/mnt/c/Users/adamc/jewson-images/global/product-images/").glob('**/*.jpg')
+    pathlist = Path("/mnt/c/Users/adamc/jewson-images/global/product-images/").glob('**/*.jpg')
     local_md5_check(pathlist, file)
     file.close()
 
@@ -84,9 +85,6 @@ def compare():
     target_file = File.open('20201216_md5_remote.txt', 'r')
 
 def main():
-    #get_remote_checksums()
-    # get_local_doc_checksums()
-
     parser = argparse.ArgumentParser()
     parser.add_argument("-l", "--location", required=True, choices=["localimages", "localdocs", "remote"],
                        dest = 'destination',
@@ -104,7 +102,7 @@ def main():
     else:
         destination = args.destination
         if destination == 'localimages':
-            get_local_image_checksums()
+            get_local_image_checksums(args.filename)
         if destination == 'localdocs':
             get_local_doc_checksums()
         if destination == 'remote':
