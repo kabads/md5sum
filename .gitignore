@@ -9,3 +9,4 @@ test*
 100.jpg
 /md5_local_jpeg.txt
 *.txt
+.vscode/
