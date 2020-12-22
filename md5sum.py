@@ -20,20 +20,24 @@ def md5(fname):
 
 def remote_md5_check(connection_str, file):
     '''
-    Accepts a connection string to Azure and a filename parameter. Creates a BlobServiceClient
-    object which provides access to the get_container_client function (a container object). 
-    Once we have a container object, we can create a blob_list, listing all the blobs in that 
-    container. 
+    Accepts a connection string to Azure and a filename parameter. Creates a 
+    BlobServiceClient object which provides access to the get_container_client 
+    function (a container object). 
+    
+    Once we have a container object, we can create a blob_list, listing all the
+    blobs in that container. 
 
-    Once we have a blob_list, we can iterate through it and get the blob properties. 
+    Once we have a blob_list, we can iterate through it and get the blob 
+    properties. 
 
-    This function checks if the content_md5 property is set (it's not mandatory). If it is not
-    set, then we write that to a file. 
+    This function checks if the content_md5 property is set (it's not 
+    mandatory). If it is not set, then we write that to a file. 
 
-    Once we have the content_md5 property, we can write that, along with the filename to the
-    file.  
+    Once we have the content_md5 property, we can write that, along with the 
+    filename to the file.  
     '''
-    blob_service_client = BlobServiceClient.from_connection_string(connection_str)
+    blob_service_client = 
+                    BlobServiceClient.from_connection_string(connection_str)
     # TODO Accept the container name as a parameter 
     container_name = "global"
     container = blob_service_client.get_container_client(container=container_name)
@@ -73,6 +77,7 @@ def get_local_image_checksums(filename="20201217_md5_local_jpg.txt"):
     accepts an optional filename parameter and passes an iterable pathlist to the local_md5_check
     function.  
     '''
+    # TODO accept Path parameter from argument
     file = open(filename, "w")
     # The below path is for windows:
     pathlist = Path("C:/Users/A845740/jewson-images/global/product-images").glob('**/*.jpg')
